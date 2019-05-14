@@ -34,15 +34,6 @@
       compile project(':react-native-phone-call-recorder')
   	```
 
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
-
-1. In Visual Studio add the `RNPhoneCallRecorder.sln` in `node_modules/react-native-phone-call-recorder/windows/RNPhoneCallRecorder.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using Phone.Call.Recorder.RNPhoneCallRecorder;` to the usings at the top of the file
-  - Add `new RNPhoneCallRecorderPackage()` to the `List<IReactPackage>` returned by the `Packages` method
-
-
 ## Usage
 ```javascript
 import RNPhoneCallRecorder from 'react-native-phone-call-recorder';
@@ -50,4 +41,3 @@ import RNPhoneCallRecorder from 'react-native-phone-call-recorder';
 // TODO: What to do with the module?
 RNPhoneCallRecorder;
 ```
-  
