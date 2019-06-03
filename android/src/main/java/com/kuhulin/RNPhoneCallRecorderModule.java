@@ -116,4 +116,9 @@ public class RNPhoneCallRecorderModule extends ReactContextBaseJavaModule {
     map.putArray("blacklist", wl);
     promise.resolve(map);
   }
+
+  @ReactMethod
+  public void switchRecordStatus(Boolean status) {
+    this.recordCallModule.isRecord = status;
+  }
 }

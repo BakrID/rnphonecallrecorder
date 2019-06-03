@@ -28,6 +28,7 @@ public class RecordCallModule extends PhonecallReceiver {
     private static ReactApplicationContext reactContext = null;
     public static ArrayList<String> whitelist = new ArrayList<String>();
     public static ArrayList<String> blacklist = new ArrayList<String>();
+    public static Boolean isRecord = false;
 
     public RecordCallModule() {
         super();
@@ -59,36 +60,43 @@ public class RecordCallModule extends PhonecallReceiver {
     protected void onIncomingCallAnswered(Context ctx, String number, Date start)
     {
         Log.i("CALL_RECORDER", "ANSWERED" + whitelist.size() + " " + blacklist.size());
-        if (whitelist.isEmpty() && blacklist.isEmpty()) {
-            startRecord("record-incoming-", start);
-        } else if (whitelist.size() > 0 && blacklist.size() == 0) {
-            if (whitelist.contains(number)) {
-                startRecord("record-incoming-", start);
-            } else {
-                WritableMap params = Arguments.createMap();
-                params.putString("number", number);
-                params.putString("type", "INCOMING_ANSWERED");
-                params.putString("reason", "This phone is not exist in white list");
-                emitDeviceEvent("onBlockRecordPhoneCall", params);
-            }
-        } else if (blacklist.size() > 0 && whitelist.size() == 0) {
-            if (blacklist.contains(number)) {
-                WritableMap params = Arguments.createMap();
-                params.putString("number", number);
-                params.putString("type", "INCOMING_ANSWERED");
-                params.putString("reason", "This phone in black list");
-                emitDeviceEvent("onBlockRecordPhoneCall", params);
-            } else {
-                startRecord("record-incoming-", start);
-            }
-        } else {
+        if (isRecord == false) {
             WritableMap params = Arguments.createMap();
             params.putString("number", number);
             params.putString("type", "INCOMING_ANSWERED");
-            params.putString("reason", "Use whitelist or blacklist");
+            params.putString("reason", "Record is disabled");
             emitDeviceEvent("onBlockRecordPhoneCall", params);
+        } else {
+            if (whitelist.isEmpty() && blacklist.isEmpty()) {
+                startRecord("record-incoming-", start);
+            } else if (whitelist.size() > 0 && blacklist.size() == 0) {
+                if (whitelist.contains(number)) {
+                    startRecord("record-incoming-", start);
+                } else {
+                    WritableMap params = Arguments.createMap();
+                    params.putString("number", number);
+                    params.putString("type", "INCOMING_ANSWERED");
+                    params.putString("reason", "This phone is not exist in white list");
+                    emitDeviceEvent("onBlockRecordPhoneCall", params);
+                }
+            } else if (blacklist.size() > 0 && whitelist.size() == 0) {
+                if (blacklist.contains(number)) {
+                    WritableMap params = Arguments.createMap();
+                    params.putString("number", number);
+                    params.putString("type", "INCOMING_ANSWERED");
+                    params.putString("reason", "This phone in black list");
+                    emitDeviceEvent("onBlockRecordPhoneCall", params);
+                } else {
+                    startRecord("record-incoming-", start);
+                }
+            } else {
+                WritableMap params = Arguments.createMap();
+                params.putString("number", number);
+                params.putString("type", "INCOMING_ANSWERED");
+                params.putString("reason", "Use whitelist or blacklist");
+                emitDeviceEvent("onBlockRecordPhoneCall", params);
+            }
         }
-
     }
 
     @Override
@@ -106,20 +114,55 @@ public class RecordCallModule extends PhonecallReceiver {
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start)
     {
-        recordService = new RecordService();
-        recordService.setFileName("record-Outgoing-" + start.toString() + ".wav");
-        recordService.setPath(reactContext.getFilesDir().getPath());
-        recordService.startRecord();
+        if (isRecord == false) {
+            WritableMap params = Arguments.createMap();
+            params.putString("number", number);
+            params.putString("type", "OUTGOING_ANSWERED");
+            params.putString("reason", "Record is disabled");
+            emitDeviceEvent("onBlockRecordPhoneCall", params);
+        } else {
+            if (whitelist.isEmpty() && blacklist.isEmpty()) {
+                startRecord("record-outgoing-", start);
+            } else if (whitelist.size() > 0 && blacklist.size() == 0) {
+                if (whitelist.contains(number)) {
+                    startRecord("record-outgoing-", start);
+                } else {
+                    WritableMap params = Arguments.createMap();
+                    params.putString("number", number);
+                    params.putString("type", "OUTGOING_ANSWERED");
+                    params.putString("reason", "This phone is not exist in white list");
+                    emitDeviceEvent("onBlockRecordPhoneCall", params);
+                }
+            } else if (blacklist.size() > 0 && whitelist.size() == 0) {
+                if (blacklist.contains(number)) {
+                    WritableMap params = Arguments.createMap();
+                    params.putString("number", number);
+                    params.putString("type", "OUTGOING_ANSWERED");
+                    params.putString("reason", "This phone in black list");
+                    emitDeviceEvent("onBlockRecordPhoneCall", params);
+                } else {
+                    startRecord("record-outgoing-", start);
+                }
+            } else {
+                WritableMap params = Arguments.createMap();
+                params.putString("number", number);
+                params.putString("type", "OUTGOING_ANSWERED");
+                params.putString("reason", "Use whitelist or blacklist");
+                emitDeviceEvent("onBlockRecordPhoneCall", params);
+            }
+        }
     }
 
     @Override
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end)
     {
-        String path = recordService.stopRecord();
-        WritableMap params = Arguments.createMap();
-        params.putString("filePath", path);
-        params.putString("number", number);
-        emitDeviceEvent("onOutgoingCallRecorded", params);
+        if (recordService != null) {
+            String path = recordService.stopRecord();
+            WritableMap params = Arguments.createMap();
+            params.putString("filePath", path);
+            params.putString("number", number);
+            emitDeviceEvent("onOutgoingCallRecorded", params);
+        }
     }
 
     @Override

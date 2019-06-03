@@ -8,4 +8,5 @@ declare module 'react-native-phone-call-recorder' {
 	export function clearBlackList(): void;
 	export function getBlackList(): Promise<string[]>;
 	export function deletePhoneBlackList(phone: string): Promise<string[]>;
+	export function switchRecordStatus(status: boolean): void;
 }
