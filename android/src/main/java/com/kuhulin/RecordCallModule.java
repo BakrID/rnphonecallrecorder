@@ -107,6 +107,8 @@ public class RecordCallModule extends PhonecallReceiver {
             WritableMap params = Arguments.createMap();
             params.putString("filePath", path);
             params.putString("number", number);
+            params.putString("start", start.toString());
+            params.putString("end", end.toString());
             emitDeviceEvent("onIncomingCallRecorded", params);
         }
     }
@@ -161,6 +163,8 @@ public class RecordCallModule extends PhonecallReceiver {
             WritableMap params = Arguments.createMap();
             params.putString("filePath", path);
             params.putString("number", number);
+            params.putString("start", start.toString());
+            params.putString("end", end.toString());
             emitDeviceEvent("onOutgoingCallRecorded", params);
         }
     }
