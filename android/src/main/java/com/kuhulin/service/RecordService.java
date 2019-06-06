@@ -31,7 +31,7 @@ public class RecordService {
         String file = path + "/" + fileName;
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
         mediaRecorder.setAudioChannels(1);
         mediaRecorder.setOutputFile(file);
         mediaRecorder.setAudioEncodingBitRate(64000);

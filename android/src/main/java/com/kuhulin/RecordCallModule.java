@@ -174,6 +174,7 @@ public class RecordCallModule extends PhonecallReceiver {
     {
         WritableMap params = Arguments.createMap();
         params.putString("number", number);
+        params.putString("date", start.toString());
         emitDeviceEvent("onMissedCall", params);
     }
 
