@@ -41,10 +41,13 @@ public class RecordService {
         try {
             mediaRecorder.prepare();
             mediaRecorder.start();
+            Log.e("ReactNativePhoneCallRecorder", "started: " + file);
         } catch (IOException e) {
-            Log.e("Record", "Microphone is already in use by another app.");
+            Log.e("ReactNativePhoneCallRecorder", "Microphone is already in use by another app. IOException: " + e.toString());
         } catch (IllegalStateException e) {
-            Log.e("recording_failed", "Microphone is already in use by another app.");
+            Log.e("ReactNativePhoneCallRecorder", "Microphone is already in use by another app. IllegalStateException: " + e.toString());
+        } catch (Exception e) {
+            Log.e("ReactNativePhoneCallRecorder", "Something went wrong in start recording. Exception: " + e.toString());
         }
     }
 
